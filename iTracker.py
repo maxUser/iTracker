@@ -27,6 +27,184 @@ def write_to_file(order):
         f.write(order[i].name + ', ' + str(order[i].initiative) + '\n')
         print(order[i].name + ', ' + str(order[i].initiative) + ' | ' + str(order[i].initiative_bonus))
 
+# If new_combatant has higher init_bonus, swap with order[i].initiative
+# Parameter: list of combatants
+# Returns: updated list of combatants
+def tie_checker(order):
+    index_dict = {}
+    start = 0
+    end = 0
+    if len(order) == 2:
+        if order[0].initiative == order[1].initiative:
+            if (order[0].pc == True) or (order[1].pc == True):
+                print('=====TIE DETECTED=====')
+                print('Initiative roll tie detected!')
+                print('Enter initiative bonus to break tie:')
+                if order[0].pc == True:
+                    order[0].initiative_bonus = int(input(order[0].name + ': '))
+                if order[1].pc == True:
+                    order[1].initiative_bonus = int(input(order[1].name + ': '))
+                if order[0].initiative_bonus < order[1].initiative_bonus:
+                    temp = Combatant()
+                    temp = order[0]
+                    order[0] = order[1]
+                    order[1] = temp
+                elif order[0].initiative_bonus == order[1].initiative_bonus:
+                    print('Initiative bonus tie detected!')
+                    print('Roll a d20 to break tie:')
+                    order[0].roll_off = int(input(order[0].name + ': '))
+                    order[1].roll_off = int(input(order[1].name + ': '))
+                    if order[0].roll_off < order[1].roll_off:
+                        temp = Combatant()
+                        temp = order[0]
+                        order[0] = order[1]
+                        order[1] = temp
+    elif len(order) == 3:
+        ties = []
+        if order[0].initiative == order[1].initiative:
+            ties.append(order[0])
+            ties.append(order[1])
+        if (order[0].initiative == order[2].initiative) and (order[0] not in ties):
+            ties.append(order[0])
+            ties.append(order[2])
+        if (order[1].initiative == order[2].initiative):
+            if order[1] not in ties:
+                ties.append(order[1])
+            if order[2] not in ties:
+                ties.append(order[2])
+        print('=====TIE DETECTED=====')
+        print('Initiative roll tie detected!')
+        print('Enter initiative bonus to break tie:')
+        for i in range(len(order)):
+            if i == len(order)-1:
+                print(order[i].name, end='')
+            else:
+                print(order[i].name + ', ', end='')
+        print()
+        for i in range(len(order)):
+            if order[i].pc == True:
+                order[i].initiative_bonus = int(input(order[i].name + ': '))
+
+        # check for init bonus ties
+        # store them in bonus_ties
+        bonus_ties = []
+        if ties[0].initiative_bonus == ties[1].initiative_bonus:
+            bonus_ties.append(ties[0])
+            bonus_ties.append(ties[1])
+        if (ties[0].initiative_bonus == ties[2].initiative_bonus):
+            if ties[0] not in bonus_ties:
+                bonus_ties.append(ties[0])
+            bonus_ties.append(ties[2])
+        if (ties[1].initiative_bonus == ties[2].initiative_bonus):
+            if ties[1] not in bonus_ties:
+                bonus_ties.append(ties[1])
+            if ties[2] not in bonus_ties:
+                bonus_ties.append(ties[2])
+
+        # reorder bonus_ties according to tiebreaker rolls
+        print('Initiative bonus tie detected!')
+        print('Roll a d20 to break tie:')
+        for i in range(len(bonus_ties)):
+            bonus_ties[i].roll_off = int(input(bonus_ties[i].name + ': '))
+        for i in range(0, len(bonus_ties)-1):
+            for j in range(0, len(bonus_ties)-1-i):
+                if bonus_ties[j].roll_off < bonus_ties[j+1].roll_off:
+                    bonus_ties[j], bonus_ties[j+1] = bonus_ties[j+1], bonus_ties[j]
+        for i in range(len(bonus_ties)):
+            order[i] = bonus_ties[i]
+    else: # combats with >3 combatants
+        # index_dict is used to store the start and end indices of separate matching pairs of numbers
+        # e.g. 17 16 16 12 11 11
+        # index_dict = {1: 2, 4: 5, start: end}
+        for i in range(len(order)):
+            if i != 0 and i != len(order)-1:
+                # write special case for when list size == 2 and 3
+                if i == 1: # special case: beginning of list
+                    if order[0].initiative == order[1].initiative:
+                        start = 0
+                    elif order[1].initiative == order[2].initiative:
+                        start = 1
+                    if (order[0].initiative == order[1].initiative) and (order[1].initiative != order[2].initiative):
+                        end = 1
+                elif i == len(order)-2: # special case: end of list
+                    if order[len(order)-2].initiative == order[len(order)-1].initiative:
+                        end = len(order)-1
+                    elif order[len(order)-2].initiative == order[len(order)-3].initiative:
+                        end = len(order)-2
+                    if (order[len(order)-2].initiative == order[len(order)-1].initiative) and (order[len(order)-2].initiative != order[len(order)-3].initiative):
+                        start = len(order)-2
+                else: # anything in between
+                    if (order[i].initiative == order[i+1].initiative) and (order[i].initiative != order[i-1].initiative):
+                        start = i
+                    if (order[i].initiative != order[i+1].initiative) and (order[i].initiative == order[i-1].initiative):
+                        end = i
+                # use this to detect initiative roll ties
+                if start != end:
+                    index_dict[start] = end
+
+        # Each key, value pairing in the dictionary (index_dict) represents
+        # the start and end positions of tied initiative rolls.
+        # Now must sort ties within list (order) by initiative bonus
+        ties = {}
+        ties_hi_to_lo = []
+        if len(index_dict) != 0:
+            print('=====TIE DETECTED=====')
+            print('Initiative roll tie detected!')
+            for key, value in index_dict.items():
+                print('TIEBREAKER between: ', end='')
+                for i in range(key, value+1):
+                    if i == value:
+                        print(order[i].name)
+                    else:
+                        print(order[i].name + ', ', end='')
+                print('Enter initiative bonus to break tie:')
+                for i in range(key, value+1):
+                    if order[i].pc == True:
+                        order[i].initiative_bonus = int(input(order[i].name + ': '))
+                    # else:
+                    #     print(order[i].name + ':', order[i].initiative_bonus)
+                    # Now that we have all initiatives bonuses
+                    # we can sort all ties according to them.
+
+                order[key:value+1] = sorted(order[key:value+1], key=lambda x: x.initiative_bonus, reverse=True)
+                # Will have to deal with initiative bonus ties
+                ties.clear()
+                for i in range(key, value+1):
+                    for j in range(key, value+1):
+                        if (order[i].initiative_bonus == order[j].initiative_bonus) and (i != j):
+                            if order[i] not in ties:
+                                # print('Adding to ties:', order[i].name)
+                                ties[order[i]] = 0
+                            if order[j] not in ties:
+                                # print('Adding to ties:', order[j].name)
+                                ties[order[j]] = 0
+                print('Initiative bonus tie detected!')
+                print('Roll a d20 to break tie:')
+                for k, v in ties.items():
+                    ties[k] = input('%s: ' % k.name)
+                    k.swap = True
+
+                # Correctly order combatants with same init bonuses based on their tiebreaker rolls
+                # They are stored in correct order in ties_hi_to_lo
+                # They should replace the existing order inside order
+                while len(ties) != 0:
+                    highest = 0
+                    for k, v in ties.items():
+                        if int(v) > highest:
+                            highest = int(v)
+                            next_to_add = k
+                    ties_hi_to_lo.append(next_to_add)
+                    del ties[next_to_add]
+
+        # Move combatants in proper order from ties_hi_to_lo to order
+        for x in range(len(order)):
+            if order[x].swap == True:
+                order[x].swap = False
+                order[x] = ties_hi_to_lo[0]
+                del ties_hi_to_lo[0]
+
+    return order
+
 # Ensure initiative entered for an ally combatant is an integer.
 # Parameter: a single friendly combatant.
 def get_initiative(ally):
@@ -37,106 +215,6 @@ def get_initiative(ally):
         print('>>> ' + ally.name + ' not added.')
         print('>>> You must enter an integer.')
         get_initiative(ally)
-
-# If new_combatant has higher init_bonus, swap with order[i].initiative
-# Parameter: list of combatants
-# Returns: updated list of combatants
-def tie_checker(order):
-    # index_dict is used to store the start and end indices of separate matching pairs of numbers
-    # e.g. 17 16 16 12 11 11
-    # index_dict = {1: 2, 4: 5, start: end}
-    index_dict = {}
-    start = 0
-    end = 0
-    for i in range(len(order)):
-        if i != 0 and i != len(order)-1:
-            # write special case for when list size == 2 and 3
-            if i == 1: # special case: beginning of list
-                if order[0].initiative == order[1].initiative:
-                    start = 0
-                elif order[1].initiative == order[2].initiative:
-                    start = 1
-                if (order[0].initiative == order[1].initiative) and (order[1].initiative != order[2].initiative):
-                    end = 1
-            elif i == len(order)-2: # special case: end of list
-                if order[len(order)-2].initiative == order[len(order)-1].initiative:
-                    end = len(order)-1
-                elif order[len(order)-2].initiative == order[len(order)-3].initiative:
-                    end = len(order)-2
-                if (order[len(order)-2].initiative == order[len(order)-1].initiative) and (order[len(order)-2].initiative != order[len(order)-3].initiative):
-                    start = len(order)-2
-            else: # anything in between
-                if (order[i].initiative == order[i+1].initiative) and (order[i].initiative != order[i-1].initiative):
-                    start = i
-                if (order[i].initiative != order[i+1].initiative) and (order[i].initiative == order[i-1].initiative):
-                    end = i
-            # use this to detect initiative roll ties
-            if start != end:
-                index_dict[start] = end
-
-    # Each key, value pairing in the dictionary (index_dict) represents
-    # the start and end positions of tied initiative rolls.
-    # Now must sort ties within list (order) by initiative bonus
-    ties = {}
-    ties_hi_to_lo = []
-    if len(index_dict) != 0:
-        print('=====TIE DETECTED=====')
-        print('Initiative roll tie(s) detected!')
-        print('Enter initiative bonus to break tie:')
-        for key, value in index_dict.items():
-            for i in range(key, value+1):
-                if i == value:
-                    print(order[i].name, end='')
-                else:
-                    print(order[i].name + ', ', end='')
-            print()
-            for i in range(key, value+1):
-                if order[i].pc == True:
-                    order[i].initiative_bonus = input(order[i].name + ': ')
-                    order[i].initiative_bonus = int(order[i].initiative_bonus)
-                else:
-                    print(order[i].name + ':', order[i].initiative_bonus)
-                # Now that we have all initiatives bonuses
-                # we can sort all ties according to them.
-
-            order[key:value+1] = sorted(order[key:value+1], key=lambda x: x.initiative_bonus, reverse=True)
-            # Will have to deal with initiative bonus ties
-            ties.clear()
-            for i in range(key, value+1):
-                for j in range(key, value+1):
-                    if (order[i].initiative_bonus == order[j].initiative_bonus) and (i != j):
-                        if order[i] not in ties:
-                            # print('Adding to ties:', order[i].name)
-                            ties[order[i]] = 0
-                        if order[j] not in ties:
-                            # print('Adding to ties:', order[j].name)
-                            ties[order[j]] = 0
-            print('Initiative bonus tiebreaker roll!')
-            for k, v in ties.items():
-                ties[k] = input('%s: ' % k.name)
-                k.swap = True
-
-            # Correctly order combatants with same init bonuses based on their tiebreaker rolls
-            # They are stored in correct order in ties_hi_to_lo
-            # They should replace the existing order inside order
-            while len(ties) != 0:
-                highest = 0
-                for k, v in ties.items():
-                    if int(v) > highest:
-                        highest = int(v)
-                        next_to_add = k
-                ties_hi_to_lo.append(next_to_add)
-                del ties[next_to_add]
-
-    # Move combatants in proper order from ties_hi_to_lo to order
-    for x in range(len(order)):
-        if order[x].swap == True:
-            order[x].swap = False
-            order[x] = ties_hi_to_lo[0]
-            del ties_hi_to_lo[0]
-
-    return order
-
 
 # Create instance of class Combatant. An ally in this case.
 # Gather all necessary information for this combatant and append to array of combatants.
@@ -162,6 +240,7 @@ def create_ally(order):
 def create_enemy(order, enemy_name, init_bonus):
     new_combatant = Combatant()
     new_combatant.name = enemy_name
+    new_combatant.initiative_bonus = init_bonus
     roll = (randint(1,20))
     # roll = 12 # for testing
     new_combatant.initiative = roll+init_bonus

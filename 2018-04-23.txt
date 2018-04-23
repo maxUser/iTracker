@@ -1,0 +1,13 @@
+snake8, 21
+uma, 20
+snake7, 20
+snake5, 16
+leah, 14
+maxi, 14
+snake4, 13
+snake6, 12
+snake1, 9
+snake9, 5
+snake3, 5
+dario, 3
+snake2, 2
