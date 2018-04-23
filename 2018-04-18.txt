@@ -1,4 +1,0 @@
-leah, 15
-maxi, 14
-grunt2, 7
-grunt1, 3

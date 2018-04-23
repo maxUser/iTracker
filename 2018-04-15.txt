@@ -1,7 +1,0 @@
-Mage2, 20
-The Snail, 13
-Mage1, 13
-Goodan, 12
-Ivellios, 12
-Turalyon, 7
-Vitarin, 7

@@ -1,8 +1,0 @@
-Manfred, 18
-Maritta, 16
-Maxi, 14
-Goblin5, 14
-Goblin4, 14
-Goblin3, 14
-Goblin2, 14
-Goblin1, 14
