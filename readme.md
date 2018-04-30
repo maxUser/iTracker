@@ -19,4 +19,4 @@ Step 5) Follow on-screen instructions
 
 ## Acknowledgments
 
-* Thanks to all the employer's in Victoria, BC for allowing me all this free time to work on random shit
+* Thanks
