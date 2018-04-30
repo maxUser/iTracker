@@ -5,3 +5,5 @@ class Combatant:
     name = 'noname'
     pc = False
     swap = False
+    def __str__(self):
+        return self.name
