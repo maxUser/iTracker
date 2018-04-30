@@ -1,5 +1,6 @@
 # Features to implement:
 # -fill out readme.md
+# -increase number of chars when printing names (lines 27/28)
 # -PC/NPC database
 # -Cycle through initiative (use arrow keys) during combat.
 #       ~During each turn, the stat block of the creature is displayed
@@ -23,7 +24,7 @@ def write_to_file(order):
     filename = str(today_date) + '.txt'
     f = open(filename, 'w')
     for i in range(len(order)):
-        f.write(order[i].name + ', ' + str(order[i].initiative) + '\n')
+        f.write("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + '\n')
         print("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + ' | ' + str(order[i].initiative_bonus))
         # "{:>10s}".format(s)
 
@@ -92,9 +93,7 @@ def tie_checker(order):
         tie = False
         if order[0].initiative == order[1].initiative:
             ties.append(order[0])
-            print('add maxi')
             ties.append(order[1])
-            print('add leah')
             tie = True
         if (order[0].initiative == order[2].initiative):
             if order[0] not in ties:
@@ -248,7 +247,7 @@ def tie_checker(order):
                 # we can sort all ties according to them.
                 order[key:value+1] = sorted(order[key:value+1], key=lambda x: x.initiative_bonus, reverse=True)
                 # Will have to deal with initiative bonus ties
-                ties.clear()
+                ties.clear() # empty ties so it can be filled with next set of ties
                 for i in range(key, value+1):
                     for j in range(key, value+1):
                         if (order[i].initiative_bonus == order[j].initiative_bonus) and (i != j):
