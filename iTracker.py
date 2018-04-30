@@ -1,10 +1,10 @@
 # Features to implement:
+# -fill out readme.md
 # -PC/NPC database
 # -Cycle through initiative (use arrow keys) during combat.
 #       ~During each turn, the stat block of the creature is displayed
 #       ~Keep track of health
 # -Unique file names (os.path.isfile('filename'))
-# -3 combatant tie checker not even close dude.
 
 # Error checking to implement:
 # -line 95: more_enemies = input('More enemies? (y/n): ')
@@ -351,8 +351,8 @@ def create_enemy(order, enemy_name, init_bonus):
     new_combatant = Combatant()
     new_combatant.name = enemy_name
     new_combatant.initiative_bonus = init_bonus
-    # roll = randint(1,20)
-    roll = 12 # for testing
+    roll = randint(1,20)
+    # roll = 12 # for testing
     new_combatant.initiative = roll+init_bonus
     order.append(new_combatant)
 
