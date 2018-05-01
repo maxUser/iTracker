@@ -13,6 +13,10 @@ Step 5) Follow on-screen instructions
 * Python3
 * Knowledge of command line interface
 
+### Under construction
+* Standalone Unix executable working
+* Standalone executable for other Windows to be implemented
+
 ## Authors
 
 * **Max Kasprzik**
