@@ -1,0 +1,6 @@
+goblin1      21
+goblin2      20
+goblin5      19
+maxi         18
+goblin4      10
+goblin3       4
