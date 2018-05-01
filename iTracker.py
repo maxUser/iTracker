@@ -8,12 +8,12 @@
 # -Unique file names (os.path.isfile('filename'))
 
 # Error checking to implement:
-# -line 95: more_enemies = input('More enemies? (y/n): ')
-#       ~What happens if other characters are input? wtf does this mean
+#
+#
+
 from Combatant import Combatant
 from random import randint
 import datetime # to get date for file name
-import os.path
 tester = 0
 
 # Writing to .txt file of given name and output to terminal.
