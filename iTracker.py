@@ -6,6 +6,7 @@
 #       ~During each turn, the stat block of the creature is displayed
 #       ~Keep track of health
 # -Unique file names (os.path.isfile('filename'))
+# -Have the program run forever until 'quit' is entered
 
 # Error checking to implement:
 # ROLL OFF BETWEEN: name, name (<-- currently on 2 lines, make 1, as shown)
@@ -263,7 +264,6 @@ def tie_checker(order):
                     dict_len = 0
                     print('\tInitiative bonus tie!')
                     print('\t\tROLL OFF between: ', end='')
-                    # print('\t\t', end='')
                     for k,v in ties.items():
                         if dict_len == len(ties)-1:
                             print(k.name)
@@ -410,4 +410,8 @@ def main():
     write_to_file(order)
 
 if __name__ == "__main__":
-   main()
+    quit = ''
+    while quit != 'quit':
+        main()
+        quit = input('Type \'quit\' to end or hit return for next encounter: ')
+        quit = quit.lower()
