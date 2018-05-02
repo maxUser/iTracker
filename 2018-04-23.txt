@@ -1,3 +1,0 @@
-daisy2, 14
-daisy1, 14
-max, 13
