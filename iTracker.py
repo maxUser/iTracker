@@ -8,7 +8,7 @@
 # -Unique file names (os.path.isfile('filename'))
 
 # Error checking to implement:
-#
+# ROLL OFF BETWEEN: name, name (<-- currently on 2 lines, make 1, as shown)
 #
 
 from Combatant import Combatant
@@ -26,7 +26,6 @@ def write_to_file(order):
     for i in range(len(order)):
         f.write("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + '\n')
         print("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + ' | ' + str(order[i].initiative_bonus))
-        # "{:>10s}".format(s)
 
 # If new_combatant has higher init_bonus, swap with order[i].initiative
 # Parameter: list of combatants
@@ -263,8 +262,8 @@ def tie_checker(order):
                 if len(ties) != 0:
                     dict_len = 0
                     print('\tInitiative bonus tie!')
-                    print('\t\tROLL OFF between: ')
-                    print('\t\t', end='')
+                    print('\t\tROLL OFF between: ', end='')
+                    # print('\t\t', end='')
                     for k,v in ties.items():
                         if dict_len == len(ties)-1:
                             print(k.name)
