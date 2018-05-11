@@ -6,7 +6,6 @@
 #       ~During each turn, the stat block of the creature is displayed
 #       ~Keep track of health
 # -Unique file names (os.path.isfile('filename'))
-# -Have the program run forever until 'quit' is entered
 
 # Error checking to implement:
 # ROLL OFF BETWEEN: name, name (<-- currently on 2 lines, make 1, as shown)
@@ -25,8 +24,8 @@ def write_to_file(order):
     filename = str(today_date) + '.txt'
     f = open(filename, 'w')
     for i in range(len(order)):
-        f.write("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + '\n')
-        print("{:<13s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + ' | ' + str(order[i].initiative_bonus))
+        f.write("{:<20s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + '\n')
+        print("{:<20s}".format(order[i].name) + "{:>2s}".format(str(order[i].initiative)) + ' | ' + str(order[i].initiative_bonus))
 
 # If new_combatant has higher init_bonus, swap with order[i].initiative
 # Parameter: list of combatants
