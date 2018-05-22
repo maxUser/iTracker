@@ -3,7 +3,7 @@ A simple tool for quickly creating an ordered list of combatants for a D&D encou
 
 ## Getting Started
 
-I tried making executables using pyinstaller, but right now only the Windows executable seems to work on other machines, whereas the OSX executable only works on mine. Currently looking into a better solution. 
+I tried making executables using pyinstaller, but right now only the Windows executable seems to work on other machines, whereas the OSX executable only works on mine. Currently learning JavaScript and ReactJS in order to make this a web app.
 
 The instructions below are for running the program with Python3 in the terminal
 Step 1) Install python 3  
